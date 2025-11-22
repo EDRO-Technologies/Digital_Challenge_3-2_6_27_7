@@ -11,7 +11,7 @@
     },
     "com.unity.burst": {
       "version": "1.8.25",
-      "depth": 2,
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.mathematics": "1.2.1",
@@ -245,7 +245,7 @@
       }
     },
     "com.unity.scriptablebuildpipeline": {
-      "version": "2.4.1",
+      "version": "2.4.3",
       "depth": 2,
       "source": "registry",
       "dependencies": {
@@ -388,7 +388,7 @@
       }
     },
     "com.unity.test-framework.performance": {
-      "version": "3.1.0",
+      "version": "3.2.0",
       "depth": 2,
       "source": "registry",
       "dependencies": {

@@ -8,3 +8,6 @@ obj
 Temp
 UserSettings
 UpgradeLog.htm
+
+Assembly-CSharp.csproj
+ProjectSettings/ProjectSettings.asset

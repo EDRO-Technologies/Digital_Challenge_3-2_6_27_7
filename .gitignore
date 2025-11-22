@@ -1,0 +1,12 @@
+.vs
+.vsconfig
+
+DroneRacingX
+Library
+Logs
+obj
+Temp
+UserSettings
+
+
+packages-logs.json

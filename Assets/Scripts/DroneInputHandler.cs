@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Unity.Netcode;
 
-public class DroneInputHandler : MonoBehaviour
+public class DroneInputHandler : NetworkBehaviour
 {
     public RealisticDronePhysics drone;
     private DroneInput input;
@@ -10,6 +11,7 @@ public class DroneInputHandler : MonoBehaviour
 
     void Start()
     {
+        if (!IsOwner) return;
         input = new DroneInput();
         input.Enable();
     }
@@ -22,15 +24,16 @@ public class DroneInputHandler : MonoBehaviour
     }
 
 
-void Update()
+    void Update()
     {
+        if (!IsOwner) return;
         if (drone == null) return;
 
         float switchValue = input.Player.FlightMode.ReadValue<float>();
 
         int modeIndex;
-        if (switchValue < -0.5f) modeIndex = -1;     // Вниз
-        else if (switchValue > 0.5f) modeIndex = 1;  // Вверх
+        if (switchValue < -0.5f) modeIndex = -1;     // пїЅпїЅпїЅпїЅ
+        else if (switchValue > 0.5f) modeIndex = 1;  // пїЅпїЅпїЅпїЅпїЅ
         else modeIndex = 0;
 
         drone.SetInput(

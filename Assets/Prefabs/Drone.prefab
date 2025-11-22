@@ -1,5 +1,70 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &222198395084325891
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5218935851570633157}
+  - component: {fileID: 2868501191915892192}
+  - component: {fileID: 2252946680180134056}
+  m_Layer: 0
+  m_Name: InputManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5218935851570633157
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222198395084325891}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 787081746759226489}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2868501191915892192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222198395084325891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83721352733096d4da8be264a54b0a70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DroneInputHandler
+  ShowTopMostFoldoutHeaderGroup: 1
+  drone: {fileID: 2261616825056512972}
+--- !u!114 &2252946680180134056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222198395084325891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 312518081b1ee464b958cb87f7ded60e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MobileDroneInputHandler
+  drone: {fileID: 0}
+  leftStick: {fileID: 0}
+  throttleSlider: {fileID: 0}
+  resetButton: {fileID: 0}
+  shootButton: {fileID: 0}
+  useGyroForYaw: 1
 --- !u!1 &2521351898050516347
 GameObject:
   m_ObjectHideFlags: 0
@@ -595,6 +660,7 @@ GameObject:
   - component: {fileID: 9057904865855769443}
   - component: {fileID: 6323035956010833963}
   - component: {fileID: 8228530488209126968}
+  - component: {fileID: 1132538163413518073}
   m_Layer: 0
   m_Name: Drone
   m_TagString: Untagged
@@ -621,6 +687,8 @@ Transform:
   - {fileID: 8580467052336523888}
   - {fileID: 5290454659249071788}
   - {fileID: 1756593032663765658}
+  - {fileID: 5218935851570633157}
+  - {fileID: 3307919570814496191}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &5611365460597737980
@@ -662,8 +730,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8970f68f42a4c247b5374cb4a234211, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RealisticDronePhysics
-  projectilePrefab: {fileID: 0}
-  firePoint: {fileID: 0}
+  projectilePrefab: {fileID: 4385991655380621576, guid: a8ba4f8c2280d0e489c3ccb62982c820, type: 3}
+  firePoint: {fileID: 3307919570814496191}
   shootForce: 20
   shootCooldown: 0.3
   motorFL: {fileID: 5290454659249071788}
@@ -760,6 +828,28 @@ MonoBehaviour:
   UseRigidBodyForMotion: 1
   AutoUpdateKinematicState: 1
   AutoSetKinematicOnDespawn: 1
+--- !u!114 &1132538163413518073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8890176269310238165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8970f68f42a4c247b5374cb4a234211, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RealisticDronePhysics
+  projectilePrefab: {fileID: 0}
+  firePoint: {fileID: 0}
+  shootForce: 20
+  shootCooldown: 0.3
+  motorFL: {fileID: 0}
+  motorFR: {fileID: 0}
+  motorBR: {fileID: 0}
+  motorBL: {fileID: 0}
+  maxMotorThrust: 15
+  yawFactor: 0.5
 --- !u!1 &9026261770314837652
 GameObject:
   m_ObjectHideFlags: 0
@@ -871,3 +961,34 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &9214284424618801204
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3307919570814496191}
+  m_Layer: 0
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3307919570814496191
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9214284424618801204}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2, z: 0.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 787081746759226489}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -50,6 +50,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Shoot",
+                    "type": "Button",
+                    "id": "bc2cd851-e35f-4784-8727-479881990295",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "FlightMode",
+                    "type": "Value",
+                    "id": "4d78f789-0d0d-4dee-afd8-7d7653ddc2b5",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -68,17 +86,6 @@
                     "name": "",
                     "id": "fc040d6d-73bb-4cc6-a5f0-dca6e7a81d20",
                     "path": "<HID::OpenTX Radiomaster TX12 Joystick>/rx",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Yaw",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "7463d2bd-4ceb-4477-b128-d1bb5d68ff63",
-                    "path": "<HID::OpenTX Radiomaster TX12 Joystick>/ry",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -116,6 +123,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Reset",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a16c0b53-fc46-48e7-a724-ecf06c79cf84",
+                    "path": "<HID::OpenTX Radiomaster TX12 Joystick>/button2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fc0adb20-26f8-47ad-9bea-168d6517b787",
+                    "path": "<HID::OpenTX Radiomaster TX12 Joystick>/ry",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FlightMode",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

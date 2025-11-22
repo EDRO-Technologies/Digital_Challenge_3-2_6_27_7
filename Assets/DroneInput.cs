@@ -136,6 +136,24 @@ public partial class @DroneInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Shoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""bc2cd851-e35f-4784-8727-479881990295"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""FlightMode"",
+                    ""type"": ""Value"",
+                    ""id"": ""4d78f789-0d0d-4dee-afd8-7d7653ddc2b5"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -154,17 +172,6 @@ public partial class @DroneInput: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""fc040d6d-73bb-4cc6-a5f0-dca6e7a81d20"",
                     ""path"": ""<HID::OpenTX Radiomaster TX12 Joystick>/rx"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Yaw"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""7463d2bd-4ceb-4477-b128-d1bb5d68ff63"",
-                    ""path"": ""<HID::OpenTX Radiomaster TX12 Joystick>/ry"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -204,6 +211,28 @@ public partial class @DroneInput: IInputActionCollection2, IDisposable
                     ""action"": ""Reset"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a16c0b53-fc46-48e7-a724-ecf06c79cf84"",
+                    ""path"": ""<HID::OpenTX Radiomaster TX12 Joystick>/button2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fc0adb20-26f8-47ad-9bea-168d6517b787"",
+                    ""path"": ""<HID::OpenTX Radiomaster TX12 Joystick>/ry"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FlightMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -217,6 +246,8 @@ public partial class @DroneInput: IInputActionCollection2, IDisposable
         m_Player_Pitch = m_Player.FindAction("Pitch", throwIfNotFound: true);
         m_Player_Roll = m_Player.FindAction("Roll", throwIfNotFound: true);
         m_Player_Reset = m_Player.FindAction("Reset", throwIfNotFound: true);
+        m_Player_Shoot = m_Player.FindAction("Shoot", throwIfNotFound: true);
+        m_Player_FlightMode = m_Player.FindAction("FlightMode", throwIfNotFound: true);
     }
 
     ~@DroneInput()
@@ -302,6 +333,8 @@ public partial class @DroneInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Pitch;
     private readonly InputAction m_Player_Roll;
     private readonly InputAction m_Player_Reset;
+    private readonly InputAction m_Player_Shoot;
+    private readonly InputAction m_Player_FlightMode;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -333,6 +366,14 @@ public partial class @DroneInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Reset".
         /// </summary>
         public InputAction @Reset => m_Wrapper.m_Player_Reset;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Shoot".
+        /// </summary>
+        public InputAction @Shoot => m_Wrapper.m_Player_Shoot;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/FlightMode".
+        /// </summary>
+        public InputAction @FlightMode => m_Wrapper.m_Player_FlightMode;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -374,6 +415,12 @@ public partial class @DroneInput: IInputActionCollection2, IDisposable
             @Reset.started += instance.OnReset;
             @Reset.performed += instance.OnReset;
             @Reset.canceled += instance.OnReset;
+            @Shoot.started += instance.OnShoot;
+            @Shoot.performed += instance.OnShoot;
+            @Shoot.canceled += instance.OnShoot;
+            @FlightMode.started += instance.OnFlightMode;
+            @FlightMode.performed += instance.OnFlightMode;
+            @FlightMode.canceled += instance.OnFlightMode;
         }
 
         /// <summary>
@@ -400,6 +447,12 @@ public partial class @DroneInput: IInputActionCollection2, IDisposable
             @Reset.started -= instance.OnReset;
             @Reset.performed -= instance.OnReset;
             @Reset.canceled -= instance.OnReset;
+            @Shoot.started -= instance.OnShoot;
+            @Shoot.performed -= instance.OnShoot;
+            @Shoot.canceled -= instance.OnShoot;
+            @FlightMode.started -= instance.OnFlightMode;
+            @FlightMode.performed -= instance.OnFlightMode;
+            @FlightMode.canceled -= instance.OnFlightMode;
         }
 
         /// <summary>
@@ -475,5 +528,19 @@ public partial class @DroneInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnReset(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Shoot" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnShoot(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "FlightMode" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnFlightMode(InputAction.CallbackContext context);
     }
 }

@@ -8,10 +8,9 @@ public class DroneInputHandler : NetworkBehaviour
     private DroneInput input;
     public static bool resetReq = false;
 
-
     void Start()
     {
-        if (!IsOwner) return;
+        //if (!IsOwner) return;
         input = new DroneInput();
         input.Enable();
     }
@@ -26,7 +25,10 @@ public class DroneInputHandler : NetworkBehaviour
 
     void Update()
     {
-        if (!IsOwner) return;
+        //if (!IsOwner) return;
+        Debug.Log($"{SystemInfo.deviceType}");
+        if (Application.platform == RuntimePlatform.Android &&
+               Application.platform == RuntimePlatform.IPhonePlayer) return;
         if (drone == null) return;
 
         float switchValue = input.Player.FlightMode.ReadValue<float>();

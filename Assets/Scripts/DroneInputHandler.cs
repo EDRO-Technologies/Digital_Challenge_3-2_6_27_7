@@ -5,6 +5,8 @@ public class DroneInputHandler : MonoBehaviour
 {
     public RealisticDronePhysics drone;
     private DroneInput input;
+    public static bool resetReq = false;
+
 
     void Start()
     {
@@ -14,13 +16,18 @@ public class DroneInputHandler : MonoBehaviour
 
     void Update()
     {
-        if (drone != null)
+        if (drone == null) return;
+
+        drone.SetInput(
+            input.Player.Throttle.ReadValue<float>(),
+            input.Player.Roll.ReadValue<float>(),
+            input.Player.Pitch.ReadValue<float>(),
+            input.Player.Yaw.ReadValue<float>()
+        );
+
+        if (input.Player.Reset.WasPressedThisFrame())
         {
-            float t = input.Player.Throttle.ReadValue<float>();
-            float r = input.Player.Roll.ReadValue<float>();
-            float p = input.Player.Pitch.ReadValue<float>();
-            float y = input.Player.Yaw.ReadValue<float>();
-            drone.SetInput(t, r, p, y);
+            resetReq = true;
         }
     }
 }

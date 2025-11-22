@@ -127,20 +127,18 @@ public partial class @DroneInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Reset"",
+                    ""type"": ""Button"",
+                    ""id"": ""1194a1a3-6910-424a-a9be-81d4c38b5f5f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""ed8352ab-d996-4317-8be6-78fa99dfa25b"",
-                    ""path"": ""/<HID>/stick[0]/y"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Throttle"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": """",
                     ""id"": ""84dc7065-8a6e-4f7c-b32c-7999488f7121"",
@@ -149,28 +147,6 @@ public partial class @DroneInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Throttle"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""c6bd9580-8405-4680-bfe5-b20d4b7bf822"",
-                    ""path"": ""/<HID>/stick[0]/x"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Yaw"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""29cdeeaa-63f5-4b64-9734-83a8fc6af34a"",
-                    ""path"": ""<Keyboard>/q"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Yaw"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -187,12 +163,12 @@ public partial class @DroneInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""942726c8-ba76-44dd-8bdf-c35b613ed7c5"",
-                    ""path"": ""/<HID>/stick[1]/y"",
+                    ""id"": ""7463d2bd-4ceb-4477-b128-d1bb5d68ff63"",
+                    ""path"": ""<HID::OpenTX Radiomaster TX12 Joystick>/ry"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Pitch"",
+                    ""action"": ""Yaw"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -209,10 +185,10 @@ public partial class @DroneInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""bd7fe6da-2560-47c6-ba12-a5e808edea53"",
-                    ""path"": ""/<HID>/stick[1]/x"",
+                    ""id"": ""c54604ba-9789-4dc6-9717-c92aa6958143"",
+                    ""path"": ""<HID::OpenTX Radiomaster TX12 Joystick>/stick/x"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""AxisDeadzone(min=0.05)"",
                     ""groups"": """",
                     ""action"": ""Roll"",
                     ""isComposite"": false,
@@ -220,12 +196,12 @@ public partial class @DroneInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""c54604ba-9789-4dc6-9717-c92aa6958143"",
-                    ""path"": ""<HID::OpenTX Radiomaster TX12 Joystick>/stick/x"",
+                    ""id"": ""936bee51-7e47-48db-b823-b2ba1a966ff3"",
+                    ""path"": ""<HID::OpenTX Radiomaster TX12 Joystick>/trigger"",
                     ""interactions"": """",
-                    ""processors"": ""AxisDeadzone(min=0.05)"",
+                    ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Roll"",
+                    ""action"": ""Reset"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -240,6 +216,7 @@ public partial class @DroneInput: IInputActionCollection2, IDisposable
         m_Player_Yaw = m_Player.FindAction("Yaw", throwIfNotFound: true);
         m_Player_Pitch = m_Player.FindAction("Pitch", throwIfNotFound: true);
         m_Player_Roll = m_Player.FindAction("Roll", throwIfNotFound: true);
+        m_Player_Reset = m_Player.FindAction("Reset", throwIfNotFound: true);
     }
 
     ~@DroneInput()
@@ -324,6 +301,7 @@ public partial class @DroneInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Yaw;
     private readonly InputAction m_Player_Pitch;
     private readonly InputAction m_Player_Roll;
+    private readonly InputAction m_Player_Reset;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -351,6 +329,10 @@ public partial class @DroneInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Roll".
         /// </summary>
         public InputAction @Roll => m_Wrapper.m_Player_Roll;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Reset".
+        /// </summary>
+        public InputAction @Reset => m_Wrapper.m_Player_Reset;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -389,6 +371,9 @@ public partial class @DroneInput: IInputActionCollection2, IDisposable
             @Roll.started += instance.OnRoll;
             @Roll.performed += instance.OnRoll;
             @Roll.canceled += instance.OnRoll;
+            @Reset.started += instance.OnReset;
+            @Reset.performed += instance.OnReset;
+            @Reset.canceled += instance.OnReset;
         }
 
         /// <summary>
@@ -412,6 +397,9 @@ public partial class @DroneInput: IInputActionCollection2, IDisposable
             @Roll.started -= instance.OnRoll;
             @Roll.performed -= instance.OnRoll;
             @Roll.canceled -= instance.OnRoll;
+            @Reset.started -= instance.OnReset;
+            @Reset.performed -= instance.OnReset;
+            @Reset.canceled -= instance.OnReset;
         }
 
         /// <summary>
@@ -480,5 +468,12 @@ public partial class @DroneInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRoll(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Reset" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnReset(InputAction.CallbackContext context);
     }
 }

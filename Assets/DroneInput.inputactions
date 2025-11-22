@@ -41,20 +41,18 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Reset",
+                    "type": "Button",
+                    "id": "1194a1a3-6910-424a-a9be-81d4c38b5f5f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
-                {
-                    "name": "",
-                    "id": "ed8352ab-d996-4317-8be6-78fa99dfa25b",
-                    "path": "/<HID>/stick[0]/y",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Throttle",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
                 {
                     "name": "",
                     "id": "84dc7065-8a6e-4f7c-b32c-7999488f7121",
@@ -63,28 +61,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Throttle",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c6bd9580-8405-4680-bfe5-b20d4b7bf822",
-                    "path": "/<HID>/stick[0]/x",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Yaw",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "29cdeeaa-63f5-4b64-9734-83a8fc6af34a",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Yaw",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -101,12 +77,12 @@
                 },
                 {
                     "name": "",
-                    "id": "942726c8-ba76-44dd-8bdf-c35b613ed7c5",
-                    "path": "/<HID>/stick[1]/y",
+                    "id": "7463d2bd-4ceb-4477-b128-d1bb5d68ff63",
+                    "path": "<HID::OpenTX Radiomaster TX12 Joystick>/ry",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Pitch",
+                    "action": "Yaw",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -123,10 +99,10 @@
                 },
                 {
                     "name": "",
-                    "id": "bd7fe6da-2560-47c6-ba12-a5e808edea53",
-                    "path": "/<HID>/stick[1]/x",
+                    "id": "c54604ba-9789-4dc6-9717-c92aa6958143",
+                    "path": "<HID::OpenTX Radiomaster TX12 Joystick>/stick/x",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "AxisDeadzone(min=0.05)",
                     "groups": "",
                     "action": "Roll",
                     "isComposite": false,
@@ -134,12 +110,12 @@
                 },
                 {
                     "name": "",
-                    "id": "c54604ba-9789-4dc6-9717-c92aa6958143",
-                    "path": "<HID::OpenTX Radiomaster TX12 Joystick>/stick/x",
+                    "id": "936bee51-7e47-48db-b823-b2ba1a966ff3",
+                    "path": "<HID::OpenTX Radiomaster TX12 Joystick>/trigger",
                     "interactions": "",
-                    "processors": "AxisDeadzone(min=0.05)",
+                    "processors": "",
                     "groups": "",
-                    "action": "Roll",
+                    "action": "Reset",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

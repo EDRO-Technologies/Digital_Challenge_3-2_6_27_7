@@ -703,6 +703,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8970f68f42a4c247b5374cb4a234211, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RealisticDronePhysics
+  ShowTopMostFoldoutHeaderGroup: 1
   projectilePrefab: {fileID: 4385991655380621576, guid: a8ba4f8c2280d0e489c3ccb62982c820, type: 3}
   firePoint: {fileID: 3307919570814496191}
   shootForce: 20
@@ -713,6 +714,8 @@ MonoBehaviour:
   motorBL: {fileID: 5673954821447053104}
   maxMotorThrust: 20
   yawFactor: 0.5
+  tiltStrength: 0.5
+  returnSpeed: 3
 --- !u!114 &9057904865855769443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -763,7 +766,7 @@ MonoBehaviour:
   ScaleLerpSmoothing: 1
   ScaleMaxInterpolationTime: 0.1
   AuthorityMode: 0
-  TickSyncChildren: 0
+  TickSyncChildren: 1
   UseUnreliableDeltas: 0
   SyncPositionX: 1
   SyncPositionY: 1
@@ -796,6 +799,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8970f68f42a4c247b5374cb4a234211, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RealisticDronePhysics
+  ShowTopMostFoldoutHeaderGroup: 1
   projectilePrefab: {fileID: 4385991655380621576, guid: a8ba4f8c2280d0e489c3ccb62982c820, type: 3}
   firePoint: {fileID: 3307919570814496191}
   shootForce: 20
@@ -806,6 +810,8 @@ MonoBehaviour:
   motorBL: {fileID: 5673954821447053104}
   maxMotorThrust: 15
   yawFactor: 0.5
+  tiltStrength: 0.5
+  returnSpeed: 3
 --- !u!54 &4926910394138745777
 Rigidbody:
   m_ObjectHideFlags: 0

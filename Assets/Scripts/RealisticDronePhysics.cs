@@ -22,30 +22,6 @@ public class RealisticDronePhysics : NetworkBehaviour
     private Rigidbody rb;
     private float throttle, roll, pitch, yaw;
     private int currentFlightMode = 0;
-<<<<<<< HEAD
-    private float followStickValue = 0f;
-
-    private float targetRoll = 0f;
-    private float targetPitch = 0f;
-    private float tiltStrength = 0.5f; // Сила наклона в режиме Follow
-    private float returnSpeed = 3f;
-
-
-    public void SetInput(float t, float r, float p, float y, int flightModeIndex)
-    {
-        //НЕ ТРОГАТЬ LOG  нгпгр
-        // dwa 
-        Debug.Log($"Roll AFTER: {r}, Pitch: {p}, Throttle: {t}");
-
-        throttle = Mathf.Clamp01(t);
-        roll = Mathf.Clamp(r, -1f, 1f);
-        pitch = Mathf.Clamp(p, -1f, 1f);
-        yaw = Mathf.Clamp(y, -1f, 1f);
-        currentFlightMode = flightModeIndex;
-
-    }
-=======
->>>>>>> 952af6c74c72605d2252b3eb44c57dd4730de790
 
     private Vector3 startPosition;
     private Quaternion startRotation;
@@ -135,24 +111,12 @@ public class RealisticDronePhysics : NetworkBehaviour
 
     void FixedUpdate()
     {
-<<<<<<< HEAD
-        if (DroneInputHandler.resetReq || MobileDroneInputHandler.resetReq)
-        {
-            DroneInputHandler.resetReq = false;
-            MobileDroneInputHandler.resetReq = false;
-
-            transform.rotation = Quaternion.identity;
-            rb.angularVelocity = Vector3.zero;
-            transform.position = startPosition;
-
-=======
         if (!IsServer) return; // ВСЯ физика — только на сервере
 
         if (DroneInputHandler.resetReq)
         {
             DroneInputHandler.resetReq = false;
             ResetPositionServerRpc();
->>>>>>> 952af6c74c72605d2252b3eb44c57dd4730de790
             return;
         }
 

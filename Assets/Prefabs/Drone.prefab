@@ -711,7 +711,7 @@ MonoBehaviour:
   motorFR: {fileID: 1756593032663765658}
   motorBR: {fileID: 8580467052336523888}
   motorBL: {fileID: 5673954821447053104}
-  maxMotorThrust: 15
+  maxMotorThrust: 20
   yawFactor: 0.5
 --- !u!114 &9057904865855769443
 MonoBehaviour:
@@ -725,7 +725,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3602428510
+  GlobalObjectIdHash: 1195207630
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -800,10 +800,10 @@ MonoBehaviour:
   firePoint: {fileID: 3307919570814496191}
   shootForce: 20
   shootCooldown: 0.3
-  motorFL: {fileID: 0}
-  motorFR: {fileID: 0}
-  motorBR: {fileID: 0}
-  motorBL: {fileID: 0}
+  motorFL: {fileID: 5290454659249071788}
+  motorFR: {fileID: 1756593032663765658}
+  motorBR: {fileID: 8580467052336523888}
+  motorBL: {fileID: 5673954821447053104}
   maxMotorThrust: 15
   yawFactor: 0.5
 --- !u!54 &4926910394138745777

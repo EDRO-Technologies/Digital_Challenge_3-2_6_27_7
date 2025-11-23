@@ -48,7 +48,7 @@ public class RealisticDronePhysics : MonoBehaviour
     {
         //НЕ ТРОГАТЬ LOG  нгпгр
         // dwa 
-        //Debug.Log($"Roll AFTER: {r}, Pitch: {p}, Throttle: {t}");
+        Debug.Log($"Roll AFTER: {r}, Pitch: {p}, Throttle: {t}");
 
         throttle = Mathf.Clamp01(t);
         roll = Mathf.Clamp(r, -1f, 1f);
@@ -74,9 +74,10 @@ public class RealisticDronePhysics : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (DroneInputHandler.resetReq)
+        if (DroneInputHandler.resetReq || MobileDroneInputHandler.resetReq)
         {
             DroneInputHandler.resetReq = false;
+            MobileDroneInputHandler.resetReq = false;
 
             transform.rotation = Quaternion.identity;
             rb.angularVelocity = Vector3.zero;

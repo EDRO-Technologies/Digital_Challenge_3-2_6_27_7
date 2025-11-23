@@ -27,11 +27,11 @@ public class MobileDroneInputHandler : MonoBehaviour
 
     void Update()
     {
-        Debug.Log($"{SystemInfo.deviceType}");
-        Debug.Log($"{Application.platform}");
         if (Application.platform != RuntimePlatform.Android &&
                Application.platform != RuntimePlatform.IPhonePlayer) return;
         if (drone == null) return;
+
+        if (resetButton) resetButton.onClick.AddListener(() => resetReq = true);
 
         float roll = leftStick.Horizontal;   // -1..1
         float pitch = leftStick.Vertical;    // -1..1

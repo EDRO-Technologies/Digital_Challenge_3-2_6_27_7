@@ -26,7 +26,6 @@ public class DroneInputHandler : NetworkBehaviour
     void Update()
     {
         //if (!IsOwner) return;
-        Debug.Log($"{SystemInfo.deviceType}");
         if (Application.platform == RuntimePlatform.Android &&
                Application.platform == RuntimePlatform.IPhonePlayer) return;
         if (drone == null) return;

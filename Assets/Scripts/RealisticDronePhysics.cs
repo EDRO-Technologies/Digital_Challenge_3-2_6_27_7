@@ -195,6 +195,27 @@ public class RealisticDronePhysics : NetworkBehaviour
 
     private void HandleAcroHorizonMode()
     {
+            // Проверка основных компонентов
+        if (rb == null)
+        {
+            Debug.LogError("Rigidbody is null! Cannot apply physics forces.");
+            return;
+        }
+        
+        if (motorFL == null || motorFR == null || motorBR == null || motorBL == null)
+        {
+            Debug.LogError("One or more motor transforms are not assigned! Check inspector setup.");
+            return;
+        }
+
+        // Дополнительная проверка, что сами Transform существуют
+        if (!motorFL.gameObject.activeInHierarchy || !motorFR.gameObject.activeInHierarchy || 
+            !motorBR.gameObject.activeInHierarchy || !motorBL.gameObject.activeInHierarchy)
+        {
+            Debug.LogWarning("Some motor GameObjects are inactive. Forces will not be applied correctly.");
+            return;
+        }
+        
         float baseThrust = throttle * maxMotorThrust;
         float rollDiff = roll * maxMotorThrust * 0.5f;
         float pitchDiff = pitch * maxMotorThrust * 0.5f;

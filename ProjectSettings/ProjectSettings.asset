@@ -833,9 +833,11 @@ PlayerSettings:
   scriptingBackend:
     Android: 1
     Server: 1
-  il2cppCompilerConfiguration: {}
+  il2cppCompilerConfiguration:
+    Server: 0
   il2cppCodeGeneration: {}
-  il2cppStacktraceInformation: {}
+  il2cppStacktraceInformation:
+    Server: 1
   managedStrippingLevel: {}
   incrementalIl2cppBuild: {}
   suppressCommonWarnings: 1

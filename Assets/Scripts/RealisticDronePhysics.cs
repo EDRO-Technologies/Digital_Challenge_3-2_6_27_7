@@ -1,62 +1,27 @@
 using UnityEngine;
+using Unity.Netcode;
 
-public class RealisticDronePhysics : MonoBehaviour
+public class RealisticDronePhysics : NetworkBehaviour
 {
-
+    [Header("Shooting")]
     public GameObject projectilePrefab;
     public Transform firePoint;
     public float shootForce = 20f;
     public float shootCooldown = 0.3f;
-
     private float lastShotTime = -10f;
 
-    public void Shoot()
-    {
-        if (Time.time - lastShotTime < shootCooldown) return;
-        if (projectilePrefab == null || firePoint == null) return;
-
-        lastShotTime = Time.time;
-
-        GameObject projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
-
-        Rigidbody rb = projectile.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.AddForce(firePoint.forward * shootForce, ForceMode.Impulse);
-        }
-
-        Destroy(projectile, 5f);
-    }
-
-
+    [Header("Motors")]
     public Transform motorFL, motorFR, motorBR, motorBL;
     public float maxMotorThrust = 15f;
     public float yawFactor = 0.5f;
 
+    [Header("Flight")]
+    public float tiltStrength = 0.5f;
+    public float returnSpeed = 3f;
+
     private Rigidbody rb;
     private float throttle, roll, pitch, yaw;
     private int currentFlightMode = 0;
-    private float followStickValue = 0f;
-
-    private float targetRoll = 0f;
-    private float targetPitch = 0f;
-    private float tiltStrength = 0.5f; // Сила наклона в режиме Follow
-    private float returnSpeed = 3f;
-
-
-    public void SetInput(float t, float r, float p, float y, int flightModeIndex)
-    {
-        //НЕ ТРОГАТЬ LOG  нгпгр
-        // dwa 
-        //Debug.Log($"Roll AFTER: {r}, Pitch: {p}, Throttle: {t}");
-
-        throttle = Mathf.Clamp01(t);
-        roll = Mathf.Clamp(r, -1f, 1f);
-        pitch = Mathf.Clamp(p, -1f, 1f);
-        yaw = Mathf.Clamp(y, -1f, 1f);
-        currentFlightMode = flightModeIndex;
-
-    }
 
     private Vector3 startPosition;
     private Quaternion startRotation;
@@ -67,30 +32,99 @@ public class RealisticDronePhysics : MonoBehaviour
         if (rb == null || motorFL == null || motorFR == null || motorBR == null || motorBL == null)
         {
             Debug.LogError("Drone: Missing Rigidbody or motors!");
+            return;
         }
 
         startPosition = transform.position;
+        startRotation = transform.rotation;
+    }
+
+    // Вызывается владельцем (локальным игроком)
+    public void SetInput(float t, float r, float p, float y, int flightModeIndex)
+    {
+        if (!IsOwner) return;
+
+        // Отправляем ввод на сервер
+        SetInputServerRpc(t, r, p, y, flightModeIndex);
+    }
+
+    [ServerRpc(RequireOwnership = true)]
+    void SetInputServerRpc(float t, float r, float p, float y, int flightModeIndex)
+    {
+        throttle = Mathf.Clamp01(t);
+        roll = Mathf.Clamp(r, -1f, 1f);
+        pitch = Mathf.Clamp(p, -1f, 1f);
+        yaw = Mathf.Clamp(y, -1f, 1f);
+        currentFlightMode = flightModeIndex;
+    }
+
+    public void Shoot()
+    {
+        if (!IsOwner) return;
+
+        // Проверка кулдауна на клиенте — для плавности, но дублируется и на сервере
+        if (Time.time - lastShotTime < shootCooldown) return;
+
+        ShootServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = true)]
+    void ShootServerRpc()
+    {
+        if (Time.time - lastShotTime >= shootCooldown && projectilePrefab != null && firePoint != null)
+        {
+            lastShotTime = Time.time;
+
+            GameObject projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+
+            // Убедимся, что у снаряда есть NetworkObject
+            NetworkObject netProj = projectile.GetComponent<NetworkObject>();
+            if (netProj == null)
+            {
+                Debug.LogError("Projectile prefab must have a NetworkObject component!");
+                Destroy(projectile);
+                return;
+            }
+
+            netProj.Spawn(); // Спавним сетевой объект
+
+            Rigidbody rbProj = projectile.GetComponent<Rigidbody>();
+            if (rbProj != null)
+            {
+                rbProj.AddForce(firePoint.forward * shootForce, ForceMode.Impulse);
+            }
+
+            // Уничтожим снаряд через 5 секунд (на всех клиентах)
+            DestroyProjectileServerRpc(netProj);
+        }
+    }
+
+    [ServerRpc]
+    void DestroyProjectileServerRpc(NetworkObjectReference projectileRef)
+    {
+        // Используем отложенное уничтожение
+        if (projectileRef.TryGet(out NetworkObject netObj))
+        {
+            Destroy(netObj.gameObject, 5f);
+        }
     }
 
     void FixedUpdate()
     {
+        if (!IsServer) return; // ВСЯ физика — только на сервере
+
         if (DroneInputHandler.resetReq)
         {
             DroneInputHandler.resetReq = false;
-
-            transform.rotation = Quaternion.identity;
-            rb.angularVelocity = Vector3.zero;
-            transform.position = startPosition;
-
+            ResetPositionServerRpc();
             return;
-
         }
 
-        if (currentFlightMode == 1) // Режим Follow
+        if (currentFlightMode == 1) // Follow Mode
         {
             HandleFollowMode();
         }
-        else // Режимы Acro и Horizon
+        else // Acro / Horizon
         {
             HandleAcroHorizonMode();
         }
@@ -98,27 +132,63 @@ public class RealisticDronePhysics : MonoBehaviour
         ApplyGravityAndDrag();
     }
 
+    [ServerRpc]
+    void ResetPositionServerRpc()
+    {
+        if (!IsServer) return;
+
+        rb.angularVelocity = Vector3.zero;
+        rb.linearVelocity = Vector3.zero;
+        transform.position = startPosition;
+        transform.rotation = startRotation;
+    }
+
     private void HandleFollowMode()
     {
-        // Используем roll и pitch от основного стика для определения угла наклона
-        targetRoll = roll * 30f; // Максимальный угол крена (можно изменить)
-        targetPitch = pitch * 30f; // Максимальный угол тангажа
+        // Целевые углы (в градусах)
+        float targetRoll = roll * 30f;
+        float targetPitch = pitch * 30f;
 
-        // Поворот по yaw остаётся как есть
-        var currentEuler = transform.rotation.eulerAngles;
-        float targetYaw = currentEuler.y + yaw * 2f;
+        // Текущие углы
+        Vector3 currentEuler = transform.rotation.eulerAngles;
+        currentEuler.x = NormalizeAngle(currentEuler.x);
+        currentEuler.z = NormalizeAngle(currentEuler.z);
 
-        // Плавный переход к целевому углу
-        float currentRoll = Mathf.LerpAngle(currentEuler.z, targetRoll, returnSpeed * Time.fixedDeltaTime);
-        float currentPitch = Mathf.LerpAngle(currentEuler.x, targetPitch, returnSpeed * Time.fixedDeltaTime);
+        // Плавный Lerp к целевым углам
+        float newRoll = Mathf.LerpAngle(currentEuler.z, targetRoll, returnSpeed * Time.fixedDeltaTime);
+        float newPitch = Mathf.LerpAngle(currentEuler.x, targetPitch, returnSpeed * Time.fixedDeltaTime);
 
-        // Ограничиваем углы, чтобы дрон не переворачивался
-        currentRoll = ClampAngle(currentRoll, -45f, 45f);
-        currentPitch = ClampAngle(currentPitch, -45f, 45f);
+        // Ограничение углов
+        newRoll = Mathf.Clamp(newRoll, -45f, 45f);
+        newPitch = Mathf.Clamp(newPitch, -45f, 45f);
 
-        transform.rotation = Quaternion.Euler(currentPitch, targetYaw, currentRoll);
+        // Yaw — накопительный (управление курсом)
+        float targetYaw = currentEuler.y + yaw * 30f * Time.fixedDeltaTime; // 30 град/с максимум
 
-        // Применяем тягу вверх
+        // Формируем новую ориентацию
+        Quaternion targetRotation = Quaternion.Euler(newPitch, targetYaw, newRoll);
+
+        // Устанавливаем ориентацию через физику (через torque), а не напрямую!
+        // Но для упрощения и стабильности в Follow-режиме можно использовать rotation override,
+        // однако NetworkRigidbody ожидает, что вы управляете через силы.
+
+        // Подход: использовать targetRotation для создания желаемой угловой скорости
+        Quaternion deltaRotation = targetRotation * Quaternion.Inverse(transform.rotation);
+        float angle;
+        Vector3 axis;
+        deltaRotation.ToAngleAxis(out angle, out axis);
+
+        if (angle > 180f) angle -= 360f;
+        if (angle < -180f) angle += 360f;
+
+        if (angle != 0 && !float.IsNaN(axis.x))
+        {
+            Vector3 desiredAngularVelocity = axis * (angle * Mathf.Deg2Rad / Time.fixedDeltaTime);
+            Vector3 torque = Vector3.Scale(rb.inertiaTensor, desiredAngularVelocity - rb.angularVelocity);
+            rb.AddTorque(torque, ForceMode.Impulse);
+        }
+
+        // Тяга вверх
         float baseThrust = throttle * maxMotorThrust;
         rb.AddForce(transform.up * baseThrust, ForceMode.Force);
     }
@@ -139,22 +209,24 @@ public class RealisticDronePhysics : MonoBehaviour
         rb.AddForceAtPosition(transform.up * T_FR, motorFR.position, ForceMode.Force);
         rb.AddForceAtPosition(transform.up * T_BR, motorBR.position, ForceMode.Force);
         rb.AddForceAtPosition(transform.up * T_BL, motorBL.position, ForceMode.Force);
-
-        float yawTorque = yaw * 5f;
-        rb.AddTorque(Vector3.up * yawTorque, ForceMode.Force);
     }
 
     private void ApplyGravityAndDrag()
     {
-        rb.AddForce(Physics.gravity * rb.mass, ForceMode.Acceleration);
+        // Гравитация уже применяется Unity автоматически, если rb.useGravity = true
+        // Но если вы хотите кастомную — оставьте. Иначе можно убрать.
+        // rb.AddForce(Physics.gravity * rb.mass, ForceMode.Acceleration); // избыточно при useGravity=true
+
+        // Аэродинамическое сопротивление
         rb.AddForce(-rb.linearVelocity * 0.5f, ForceMode.Force);
         rb.AddTorque(-rb.angularVelocity * 0.3f, ForceMode.Force);
     }
 
-    private float ClampAngle(float angle, float min, float max)
+    // Вспомогательная функция для нормализации углов в [-180, 180]
+    private float NormalizeAngle(float angle)
     {
-        if (angle > 180) angle -= 360;
-        return Mathf.Clamp(angle, min, max);
+        while (angle > 180f) angle -= 360f;
+        while (angle < -180f) angle += 360f;
+        return angle;
     }
-
 }
